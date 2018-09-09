@@ -11,7 +11,7 @@ library(zoo)
 library(xts)
 
 
-#Defini„o da pasta de trabalho
+#Defini√£o da pasta de trabalho
 setwd("C:/Projetos/r")
 getwd()
 
@@ -23,19 +23,19 @@ head(dados)
 names(dados)
 
 
-#Nomenclaturas dos rÛtulos
+#Nomenclaturas dos r√≥tulos
 #No - Id da linha
 #year, month, day e hour
 #pm2.5 - indicador pm2.5
-#DEWP - Ponto de orv·lho
-#TEMP - Temperat˙ra
-#PRES - Press„o
-#cbwd - DireÁ„o combinada do vento
+#DEWP - Ponto de orv√°lho
+#TEMP - Temperat√∫ra
+#PRES - Press√£o
+#cbwd - Dire√ß√£o combinada do vento
 #Iws - Veloricade do vento acumulada
 #Is - Horas acumuladas de neve
 #Ir - Horas acumuladas de chuva
 
-#Inclus„o do campo data
+#Inclus√£o do campo data
 dados$Data  = (with(dados, ISOdatetime( year, month, day, 0, 0, 0, tz = "" )))
 
 #Criando variaveis para cada campo
@@ -57,17 +57,17 @@ dados.Data = dados["Data"]
 #Criando outro data frame para mudar a ordem de algumas colunas
 df = data.frame(dados$cbwd,dados$Data, dados$pm2.5, dados$year,dados$month,dados$day,dados$hour,dados$DEWP, dados$TEMP, dados$PRES,  dados$Iws, dados$Is, dados$Ir )
 
-#InformaÁıes do data frame
+#Informa√ß√µes do data frame
 class(df)
 ncol(df) 
 head(df) 
 names(df)
 
-#Sum·rio Geral
+#Sum√°rio Geral
 summary(df)
 
 
-print("InformaÁıes estatÌsticas por vari·vel: ")
+print("Informa√ß√µes estat√≠sticas por vari√°vel: ")
 for(i in 1 : ncol(df) ) {
   if (!grepl(colnames(df)[i], "dados.cbwd")) {
     print(paste("", colnames(df)[i],":"))  
@@ -79,19 +79,19 @@ for(i in 1 : ncol(df) ) {
     variancia = var(df[, i], na.rm = TRUE)
     quartis = quantile(df[, i], na.rm = TRUE)
     
-    print(paste(" ", "MÌnimo: ",minimo))  
-    print(paste(" ", "M·ximo: ",maximo))  
-    print(paste(" ", "MÈdia: ",media))  
+    print(paste(" ", "M√≠nimo: ",minimo))  
+    print(paste(" ", "M√°ximo: ",maximo))  
+    print(paste(" ", "M√©dia: ",media))  
     print(paste(" ", "Mediana: ",mediana))  
-    print(paste(" ", "Desvio Padr„o: ",desviopadrao))  
-    print(paste(" ", "Vari‚ncia: ",variancia))  
+    print(paste(" ", "Desvio Padr√£o: ",desviopadrao))  
+    print(paste(" ", "Vari√¢ncia: ",variancia))  
     print(paste(" ", "Quartis: ")) 
     print(quartis)
   }
 }
 
 
-#Conhecendo os dados - VisualizaÁ„o
+#Conhecendo os dados - Visualiza√ß√£o
 for(i in which(colnames(df) == "dados.pm2.5") : which(colnames(df) == "dados.Ir")) {
   if(is.factor(df[,i])) {
     print(ggplot(df, aes(df[, i])) +
@@ -106,7 +106,7 @@ for(i in which(colnames(df) == "dados.pm2.5") : which(colnames(df) == "dados.Ir"
 }
 
 
-#CorrelaÁ„o Pm 2.5 com demais vari·veis importantes
+#Correla√ß√£o Pm 2.5 com demais vari√°veis importantes
 for(i in which(colnames(df) == "dados.year"):which(colnames(df) == "dados.Ir")) {
   if(!is.factor(df[,i])) {
     print(paste("pm2.5 & ", colnames(df)[i], sep = ""))
@@ -118,17 +118,17 @@ for(i in which(colnames(df) == "dados.year"):which(colnames(df) == "dados.Ir")) 
   }
 }
 
-#CorrelaÁ„o entre demais v·ri·veis (sem considerar pm 2.5)
+#Correla√ß√£o entre demais v√°ri√°veis (sem considerar pm 2.5)
 for(y in which(colnames(df) == "dados.year"):which(colnames(df) == "dados.Ir")) {
   for(i in which(colnames(df) == "dados.year"):which(colnames(df) == "dados.Ir")) {
-    #N„o realizar verificaÁ„o para mesma coluna em x e Y
-    #Removido dados.cbwd por n„o ser numÈrico
+    #N√£o realizar verifica√ß√£o para mesma coluna em x e Y
+    #Removido dados.cbwd por n√£o ser num√©rico
     if ((!grepl(colnames(df)[i], colnames(df)[y])) &  (!grepl(colnames(df)[i], "dados.cbwd")  &  (!grepl(colnames(df)[y], "dados.cbwd")))) {
       if(!is.factor(df[,i])) {
         print(paste(colnames(df)[y]," & ", colnames(df)[i], sep = ""))
         print(cor(df[, y], df[, i], use = "complete.obs"))
         
-        #Criado uma codiÁ„o para cada Y visando nomear corretamente no eixo do gr·fico
+        #Criado uma codi√ß√£o para cada Y visando nomear corretamente no eixo do gr√°fico
         if (grepl(colnames(df)[y], "dados.year")) {
           print(ggplot(df, aes(df[,i], dados.year)) +
                   geom_point() +
@@ -179,7 +179,7 @@ for(y in which(colnames(df) == "dados.year"):which(colnames(df) == "dados.Ir")) 
                   geom_point() +
                   xlab(colnames(df)[i]))
         }
-        #Se cair no else jogar direto a vari·vel df[,y] mantendo valores corretos mas sem nomear a coluna
+        #Se cair no else jogar direto a vari√°vel df[,y] mantendo valores corretos mas sem nomear a coluna
         else {
           print(ggplot(df, aes(df[,i], df[,y])) +
                   geom_point() +
@@ -195,7 +195,7 @@ for(y in which(colnames(df) == "dados.year"):which(colnames(df) == "dados.Ir")) 
 
 
 
-#Criando outro data frame para apresentar graficacamente correlaÁ„o com corrplot
+#Criando outro data frame para apresentar graficacamente correla√ß√£o com corrplot
 df2 = data.frame(dados$pm2.5, dados$year,dados$month,dados$day,dados$hour,dados$DEWP, dados$TEMP, dados$PRES, dados$Iws, dados$Is, dados$Ir )
 head(df2)
 m = cor(df2, use = "complete.obs") 
@@ -206,7 +206,26 @@ corrplot(m, method="number")
 corrplot(m, method="color")
 
 
-# modelo regress„o m˙ltipla
+#Aplica√ß√£o do holt linear
+horas_estimativa_futura = 30 * 24 # 30 dias
+frequencia = 365.25 * 24 #horas por ano
+inicio = c(2010,1) #2010/Jan
+yt=na.fill(df$dados.pm2.5, 0)
+datas= df$dados.Data
+plot(yt)
+plot(df$dados.Data, yt)
+dados.serie = ts(yt,frequency = frequencia, start = inicio )
+dados.serie
+mod1=HoltWinters(dados.serie, seasonal = "additive")
+mod1
+plot(mod1)
+fitted(mod1)
+plot(fitted(mod1))
+pred=predict(mod1,horas_estimativa_futura,prediction.interval = TRUE)
+pred
+plot(mod1,pred)
+
+# modelo regress√£o m√∫ltipla
 #Modelo com todo DataSet
 regression.model <- lm(dados.pm2.5 ~ dados.year+dados.month+dados.day+dados.hour+dados.DEWP+dados.TEMP+dados.PRES +dados.cbwd + dados.Iws + dados.Is + dados.Ir, data=df)  
 print(regression.model)
@@ -214,25 +233,33 @@ print(summary(regression.model))
 configuracao <- data.frame(dados.year = 2010, dados.month = 2, dados.day = 17, dados.hour = 1, dados.DEWP = -13, dados.TEMP = -5, dados.PRES = 1025,  dados.cbwd  = "cv", dados.Iws = 1.78, dados.Is = 0, dados.Ir = 0 )
 print(configuracao)
 resultado <-  predict(regression.model,configuracao)
-print(paste("PM 2.5 previsto È de ", resultado))
+print(paste("PM 2.5 previsto √© de ", resultado))
 
-#Modelo com as 2 var·veis com maior correlaÁ„o positiva com PM 2.5
+#Modelo com as 2 var√°veis com maior correla√ß√£o positiva com PM 2.5
 regression.model <- lm(dados.pm2.5 ~ dados.day+dados.DEWP, data=df)  
 print(regression.model)
 print(summary(regression.model))
 configuracao <- data.frame(dados.day = 17, dados.DEWP = -13 )
 print(configuracao)
 resultado <-  predict(regression.model,configuracao)
-print(paste("PM 2.5 previsto È de ", resultado))
+print(paste("PM 2.5 previsto √© de ", resultado))
 
-#Modelo de regress„o com data concatenada e TEMP
+#Modelo de regress√£o com data concatenada e TEMP
 regression.model <- lm(dados.pm2.5 ~ dados.Data+dados.TEMP, data=df)  
 print(regression.model)
 print(summary(regression.model))
-configuracao <- data.frame(dados.Data = ISOdatetime( 2010, 10, 10, 0, 0, 0, tz = "" ), dados.TEMP = 25 )
+configuracao <- data.frame(dados.Data = ISOdate( 2010, 10, 10), dados.TEMP = 25 )
 print(configuracao)
 resultado <-  predict(regression.model,configuracao)
-print(paste("PM 2.5 previsto È de ", resultado))
+print(paste("PM 2.5 previsto √© de ", resultado))
 
 
- 
+#Modelo de regress√£o com Ano, M√™s 
+regression.model <- lm(dados.pm2.5 ~ dados.year+dados.month, data=df)  
+print(regression.model)
+print(summary(regression.model))
+configuracao <- data.frame(dados.year = 2018, dados.month = 9 )
+print(configuracao)
+resultado <-  predict(regression.model,configuracao)
+print(paste("PM 2.5 previsto √© de ", resultado))
+
